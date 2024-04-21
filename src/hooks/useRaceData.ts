@@ -1,14 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
+import {useState, useEffect} from 'react';
 
 import {Race} from '../models/Race';
 import nedsApi from '../api/nedsApi';
 import {RootState} from '../store/store';
 
-import RaceItem from './RaceItem';
-
-const RaceList = () => {
+const useRaceData = () => {
   const [races, setRaces] = useState<Race[]>([]);
   const {id} = useSelector((state: RootState) => state.appSlice);
 
@@ -45,22 +42,7 @@ const RaceList = () => {
     return () => clearInterval(intervalId);
   }, [id]);
 
-  return (
-    <View>
-      <FlatList
-        data={races}
-        style={styles.listContainer}
-        renderItem={({item}) => <RaceItem race={item} />}
-        keyExtractor={item => `${item.meeting_id}`}
-      />
-    </View>
-  );
+  return races;
 };
 
-export default RaceList;
-
-const styles = StyleSheet.create({
-  listContainer: {
-    height: 'auto',
-  },
-});
+export default useRaceData;

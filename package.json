@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
+    "@testing-library/react-hooks": "^8.0.1",
     "axios": "^1.6.8",
+    "jest-mock": "^29.7.0",
     "jest-react-native": "^18.0.0",
     "react": "18.2.0",
     "react-native": "0.73.7",
@@ -43,23 +45,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest",
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "testPathIgnorePatterns": [
-      "\\.snap$",
-      "<rootDir>/node_modules/"
-    ],
-    "cacheDirectory": ".jest/cache"
   }
 }
