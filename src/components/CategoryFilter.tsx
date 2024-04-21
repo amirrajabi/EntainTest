@@ -1,41 +1,30 @@
-import React, {useState} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-interface Category {
-  id: string;
-  label: string;
-}
+import {selectedCategory} from '../store/appSlice';
+import {categories} from '../constants/categories';
+import {RootState} from '../store/store';
 
-interface Props {
-  onCategoryChange: (selectedCategoryId: string) => void;
-}
-
-const CategoryFilter: React.FC<Props> = ({onCategoryChange}) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
-
-  const categories: Category[] = [
-    {id: '', label: 'All'},
-    {id: '9daef0d7-bf3c-4f50-921d-8e818c60fe61', label: 'Greyhound'},
-    {id: '161d9be2-e909-4326-8c2c-35ed71fb460b', label: 'Harness'},
-    {id: '4a2788f8-e825-4d36-9894-efd4baf1cfae', label: 'Horse'},
-  ];
-
-  const handleCategoryPress = (categoryId: string) => {
-    setSelectedCategoryId(categoryId);
-    onCategoryChange(categoryId);
-  };
+const CategoryFilter = () => {
+  const dispatch = useDispatch();
+  const {id} = useSelector((state: RootState) => state.appSlice);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select a Category:</Text>
       <View style={styles.buttonGroup}>
         {categories.map(category => (
-          <Button
+          <TouchableOpacity
             key={category.id}
-            title={category.label}
-            onPress={() => handleCategoryPress(category.id)}
-            color={selectedCategoryId === category.id ? '#2196F3' : '#ccc'}
-          />
+            style={styles.category}
+            onPress={() => dispatch(selectedCategory(category.id))}>
+            <Text
+              style={
+                category.id !== id ? styles.buttons : styles.selectedButton
+              }>
+              {category.label}
+            </Text>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
@@ -44,15 +33,35 @@ const CategoryFilter: React.FC<Props> = ({onCategoryChange}) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    paddingHorizontal: 50,
+    paddingVertical: 10,
+    marginVertical: 16,
   },
-  title: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
+  category: {},
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  buttons: {
+    fontSize: 14,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    overflow: 'hidden',
+    borderColor: '#ccc',
+    backgroundColor: '#FFFFFF',
+  },
+  selectedButton: {
+    borderColor: '#ff7800',
+    backgroundColor: '#ff7800',
+    color: '#FFFFFF',
+    fontSize: 14,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    overflow: 'hidden',
   },
 });
 

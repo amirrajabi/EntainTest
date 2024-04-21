@@ -1,27 +1,24 @@
-import {FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import {Race} from '../models/Race';
 import nedsApi from '../api/nedsApi';
+import {RootState} from '../store/store';
 
 import RaceItem from './RaceItem';
-import CategoryFilter from './CategoryFilter';
 
 const RaceList = () => {
   const [races, setRaces] = useState<Race[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null,
-  );
+  const {id} = useSelector((state: RootState) => state.appSlice);
 
   useEffect(() => {
     let intervalId: any;
     const fetchAndFilterRaces = async () => {
       try {
         let fetchedRaces = await nedsApi.fetchRaces();
-        if (selectedCategoryId) {
-          fetchedRaces = fetchedRaces.filter(
-            race => race.category_id === selectedCategoryId,
-          );
+        if (id) {
+          fetchedRaces = fetchedRaces.filter(race => race.category_id === id);
         }
 
         const processedRaces = fetchedRaces
@@ -46,23 +43,24 @@ const RaceList = () => {
     fetchAndFilterRaces();
     intervalId = setInterval(fetchAndFilterRaces, 60000);
     return () => clearInterval(intervalId);
-  }, [selectedCategoryId]);
-
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategoryId(categoryId);
-  };
+  }, [id]);
 
   return (
-    <>
-      <CategoryFilter onCategoryChange={handleCategoryChange} />
-
+    <View>
       <FlatList
         data={races}
+        style={styles.listContainer}
         renderItem={({item}) => <RaceItem race={item} />}
         keyExtractor={item => `${item.meeting_id}`}
       />
-    </>
+    </View>
   );
 };
 
 export default RaceList;
+
+const styles = StyleSheet.create({
+  listContainer: {
+    height: 'auto',
+  },
+});

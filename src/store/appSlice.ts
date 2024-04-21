@@ -6,7 +6,7 @@ interface CategoryState {
 }
 
 const initialState: CategoryState = {
-  id: '000-home',
+  id: '',
 };
 
 export const categorySlice = createSlice({
